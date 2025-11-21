@@ -15,6 +15,5 @@ If you already have Python, NumPy, Matplotlib, and Jupyter installed on your sys
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/Machine-Learning-Tutorial.git
-cd Machine-Learning-Tutorial
-
+git clone https://github.com/rosenberg9/Intro-to-Supervised-Learning.git
+cd Intro-to-Supervised-Learning
