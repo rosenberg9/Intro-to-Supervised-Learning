@@ -108,57 +108,6 @@ def train(X_train, y_train, X_test, y_test, config, params, epochs=15):
 
     return params, train_losses, test_accs
 
-
-# ------------------------------
-# 1. Prepare trimmed dataset
-# ------------------------------
-def prepare_dataset(spectra, classes, lambda_min=3800, lambda_max=9200, *, standardize=True):
-    """
-    Build a flux matrix using only wavelengths in [lambda_min, lambda_max].
-    Returns:
-        X        : (N, M) trimmed & standardized flux matrix
-        y_int    : (N,)   integer labels
-        y_onehot : (N,C)  one-hot labels
-        waves    : (M,)   trimmed wavelength grid
-    """
-    # integer labels 0..C-1
-    y_int = np.array([classes.index(s['class']) for s in spectra], dtype=int)
-    num_classes = len(classes)
-
-    # global wavelength grid
-    all_waves = np.unique(np.concatenate([s['wavelength'] for s in spectra]))
-
-    # trim to user range
-    mask = (all_waves >= lambda_min) & (all_waves <= lambda_max)
-    waves = all_waves[mask]
-    print(f"{waves.size} wavelengths remaining after trimming to {lambda_min}-{lambda_max} Å")
-
-    # interpolate each spectrum onto trimmed grid
-    X = np.empty((len(spectra), waves.size), dtype=float)
-    for i, spec in enumerate(spectra):
-        X[i] = np.interp(
-            waves,
-            spec["wavelength"],
-            spec["flux"],
-            left=spec["flux"][0],
-            right=spec["flux"][-1]
-        )
-
-    # standardize per wavelength
-    if standardize:
-        mean = X.mean(axis=0, keepdims=True)
-        std  = X.std(axis=0, keepdims=True) + 1e-8
-        X = (X - mean) / std
-
-    # one-hot labels
-    y_onehot = np.eye(num_classes)[y_int]
-
-    return X.astype(np.float32), y_int, y_onehot.astype(np.float32), waves
-
-
-# ------------------------------
-# 2. Manual train/test split
-# ------------------------------
 def manual_train_test_split(X, y_int, y_onehot, *, test_fraction=0.2, seed=0):
     """
     Split manually into train/test subsets.
@@ -185,6 +134,7 @@ def softmax(logits):
     logits = logits - logits.max(axis=1, keepdims=True)
     ex = np.exp(logits)
     return ex / ex.sum(axis=1, keepdims=True)
+
 def build(input_dim, hidden_layers, output_dim,
               activation='relu',
               use_dropout=False,
@@ -220,6 +170,7 @@ def build(input_dim, hidden_layers, output_dim,
     )
 
     return config, params
+
 def forward(x, params, config, *, train=False, rng=None):
     cache = dict(inputs=[], preacts=[], drop_masks=[])
     out = x
