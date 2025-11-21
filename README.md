@@ -2,24 +2,19 @@
 
 This repository contains slides and an interactive notebook on supervised learning. In the slides the reader learns about what neural networks are, and how they work. In the notebook is a Python tutorial where the reader builds a supervised learning network to classify stars, galaxies and quasars from SDSS spectra.
 
-## Installation & Setup
+The material includes:
 
-The notebooks rely only on `numpy`, `matplotlib`, and Jupyter. Any recent Python 3.9+ interpreter works, but the simplest way to keep dependencies isolated is to use a virtual environment:
+- A conceptual overview of supervised learning and neural networks
+- A hands-on Jupyter notebook (`notebooks/sdss_tutorial.ipynb`)
+- Sample SDSS spectra stored under `data/`
 
-```bash
-cd "Machine Learning Tutorial"
-python3 -m venv .venv
-source .venv/bin/activate          # On Windows use: .venv\Scripts\activate
-pip install --upgrade pip
-pip install numpy matplotlib jupyter
-```
+## Getting Started
 
-Once the dependencies install, launch Jupyter and open the tutorial:
+If you already have Python, NumPy, Matplotlib, and Jupyter installed on your system, setup is simple:
+
+### 1. Clone the repository
 
 ```bash
-jupyter lab notebooks/sdss_tutorial.ipynb
-# or
-jupyter notebook notebooks/sdss_tutorial.ipynb
-```
+git clone https://github.com/<your-username>/Machine-Learning-Tutorial.git
+cd Machine-Learning-Tutorial
 
-All required SDSS sample data already lives under the `data/` folder, so you can run the notebook cells as-is. If you want to reset the environment later, simply remove the `.venv` directory and repeat the steps above.
