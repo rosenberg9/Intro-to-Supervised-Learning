@@ -1,32 +1,5 @@
 import numpy as np
 
-def forward(x, params, config, *, train=False, rng=None):
-    cache = dict(inputs=[], preacts=[], drop_masks=[])
-    out = x
-
-    keep_prob = 1 - config['dropout_rate']
-
-    for i, width in enumerate(config['hidden_layers']):
-        cache['inputs'].append(out)
-        z = out @ params[f'W{i}'] + params[f'b{i}']
-        cache['preacts'].append(z)
-
-        out = relu(z)
-
-        # dropout
-        if config['use_dropout'] and train:
-            if rng is None:
-                rng = np.random.default_rng()
-            mask = (rng.random(out.shape) < keep_prob).astype(float) / keep_prob
-            out *= mask
-            cache['drop_masks'].append(mask)
-        else:
-            cache['drop_masks'].append(None)
-
-    cache['final_hidden'] = out
-    logits = out @ params['W_out'] + params['b_out']
-    return logits, cache
-
 def manual_train_test_split(X, y_int, y_onehot, *, test_fraction=0.2, seed=0):
     """
     Split manually into train/test subsets.
